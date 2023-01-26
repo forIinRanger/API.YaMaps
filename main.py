@@ -1,7 +1,10 @@
 from io import BytesIO
 
+
+import pygame
 import requests
 from PIL import Image
+
 
 
 def get_image(x_coord: float, y_coord: float, size_x: float = 0.1, size_y: float = 0.1) -> BytesIO or str:
@@ -27,4 +30,19 @@ def get_image(x_coord: float, y_coord: float, size_x: float = 0.1, size_y: float
     return BytesIO(response.content)
 
 
+
+def move_screen(i, x_coord: float, y_coord: float, spn: tuple[float, float]) -> BytesIO:
+    if i.type == pygame.K_UP:
+        return get_image(x_coord, y_coord + spn[1], spn[0], spn[1])
+    elif i.type == pygame.K_DOWN:
+        return get_image(x_coord, y_coord - spn[1], spn[0], spn[1])
+    elif i.type == pygame.K_RIGHT:
+        return get_image(x_coord + spn[0], y_coord, spn[0], spn[1])
+    elif i.type == pygame.K_LEFT:
+        return get_image(x_coord - spn[0], y_coord, spn[0], spn[1])
+
+    else:
+        return get_image(x_coord, y_coord, spn[0], spn[1])
+
 Image.open(get_image(50, 50)).show()
+
