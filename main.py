@@ -31,7 +31,7 @@ def get_image(x_coord: float, y_coord: float, size_x: float = 0.1, size_y: float
 
 
 
-def move_screen(i, x_coord: float, y_coord: float, spn: tuple[float, float]) -> BytesIO:
+def move_screen(i, x_coord: float, y_coord: float, spn: tuple[float, float]) -> BytesIO or str:
     if i.type == pygame.K_UP:
         return get_image(x_coord, y_coord + spn[1], spn[0], spn[1])
     elif i.type == pygame.K_DOWN:
