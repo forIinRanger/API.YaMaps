@@ -1,0 +1,85 @@
+import os
+import sys
+import io
+import pygame
+from io import BytesIO
+
+import requests
+
+
+def get_image(x_coord: float, y_coord: float, size_x: float = 0.1, size_y: float = 0.1) -> BytesIO or str:
+    coords = ",".join([str(x_coord), str(y_coord)])
+    spn = ",".join([str(size_x), str(size_y)])
+
+    search_api_server = "http://static-maps.yandex.ru/1.x/"
+
+    apikey = "40d1649f-0493-4b70-98ba-98533de7710b",
+
+    search_params = {
+        "l": 'map',
+        "apikey": apikey,
+        "ll": coords,
+        "spn": spn
+    }
+
+    response = requests.get(search_api_server, params=search_params)
+
+    if not response or response.status_code != 200:
+        return "Ошибка"
+
+    return BytesIO(response.content)
+
+
+def load_image(name, colorkey=None):
+    fullname = os.path.join(name)
+    if not os.path.isfile(fullname):
+        print(f"Файл с изображением '{fullname}' не найден")
+        sys.exit()
+    image = pygame.image.load(fullname)
+    if colorkey is not None:
+        image = image.convert()
+        if colorkey == -1:
+            colorkey = image.get_at((0, 0))
+        image.set_colorkey(colorkey)
+    else:
+        image = image.convert_alpha()
+    return image
+
+
+if __name__ == '__main__':
+    x_crd = 50
+    y_crd = 50
+    mash_x = 0.1
+    mash_y = 0.1
+    pygame.init()
+    size = width, height = 800, 800
+    screen = pygame.display.set_mode(size)
+    all_sprites = pygame.sprite.Group()
+
+    e = get_image(x_crd, y_crd)
+    screen.blit(pygame.image.load(io.BytesIO(e.getvalue())), (100, 100))
+    running = True
+    while running:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                running = False
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_PAGEUP:
+                    try:
+                        mash_x *= 2
+                        mash_y *= 2
+                        e = get_image(x_crd, y_crd, size_x=mash_x, size_y=mash_y)
+                        screen.blit(pygame.image.load(io.BytesIO(e.getvalue())), (100, 100))
+                    except AttributeError:
+                        pass
+                if event.key == pygame.K_PAGEDOWN:
+                    try:
+                        mash_x /= 2
+                        mash_y /= 2
+                        e = get_image(x_crd, y_crd, size_x=mash_x, size_y=mash_y)
+                        screen.blit(pygame.image.load(io.BytesIO(e.getvalue())), (100, 100))
+                    except AttributeError:
+                        pass
+        pygame.display.flip()
+
+    pygame.quit()
