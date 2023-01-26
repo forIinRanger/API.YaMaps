@@ -1,9 +1,10 @@
 from io import BytesIO
 
+
 import pygame
 import sys
-
 import requests
+
 
 
 class App:
@@ -39,6 +40,7 @@ class App:
 
         apikey = "40d1649f-0493-4b70-98ba-98533de7710b",
 
+
         search_params = {
             "l": 'map',
             "apikey": apikey,
@@ -64,6 +66,7 @@ class App:
             self.x_coord -= self.spn[0]
 
         self.get_image(self, self.x_coord, self.y_coord, self.spn[0], self.spn[1])
+
 
 
 if __name__ == '__main__':
