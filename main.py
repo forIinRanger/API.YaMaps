@@ -62,6 +62,10 @@ class App:
             self.x_coord += self.spn[0]
         elif event.key == pygame.K_LEFT:
             self.x_coord -= self.spn[0]
+        elif event.key == pygame.K_PAGEUP:
+            self.spn = tuple(map(lambda x: x * 2, self.spn))
+        elif event.key == pygame.K_PAGEDOWN:
+            self.spn = tuple(map(lambda x: x / 2, self.spn))
 
         self.get_image(self, self.x_coord, self.y_coord, self.spn[0], self.spn[1])
 
