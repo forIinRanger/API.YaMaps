@@ -23,12 +23,10 @@ class App:
                     pygame.quit()
                     sys.exit()
 
-    def update(self):
-        pass
-
     @staticmethod
-    def get_image(x_coord: float, y_coord: float, zoom: int = 10) -> BytesIO or str:
+    def get_image(x_coord: float, y_coord: float, size_x: float = 0.1, size_y: float = 0.1) -> BytesIO or str:
         coords = ",".join([str(x_coord), str(y_coord)])
+        spn = ",".join([str(size_x), str(size_y)])
 
         search_api_server = "http://static-maps.yandex.ru/1.x/"
 
@@ -38,15 +36,13 @@ class App:
             "l": 'map',
             "apikey": apikey,
             "ll": coords,
-            "z": zoom
+            "spn": spn
         }
 
         response = requests.get(search_api_server, params=search_params)
 
         if not response or response.status_code != 200:
             return "Ошибка"
-
-        Image.open(BytesIO(response.content)).show()
 
         return BytesIO(response.content)
 
