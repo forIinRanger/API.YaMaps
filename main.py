@@ -1,10 +1,9 @@
 from io import BytesIO
 
-
 import pygame
 import sys
-import requests
 
+import requests
 
 
 class App:
@@ -17,7 +16,8 @@ class App:
 
         self.x_coord, self.y_coord = 37.639540, 55.739407
         self.spn = 0.05, 0.05
-        self.get_image(self, self.x_coord, self.y_coord, self.spn[0], self.spn[1])
+        self.mode = 'map'
+        self.get_image(self, self.x_coord, self.y_coord, self.mode, self.spn[0], self.spn[1])
 
     def run(self):
         while True:
@@ -32,7 +32,7 @@ class App:
             pygame.display.flip()
 
     @staticmethod
-    def get_image(self, x_coord: float, y_coord: float, size_x: float = 0.1, size_y: float = 0.1):
+    def get_image(self, x_coord: float, y_coord: float, mode: str, size_x: float = 0.1, size_y: float = 0.1):
         coords = ",".join([str(x_coord), str(y_coord)])
         spn = ",".join([str(size_x), str(size_y)])
 
@@ -40,9 +40,8 @@ class App:
 
         apikey = "40d1649f-0493-4b70-98ba-98533de7710b",
 
-
         search_params = {
-            "l": 'map',
+            "l": mode,
             "apikey": apikey,
             "ll": coords,
             "spn": spn
@@ -64,16 +63,23 @@ class App:
             self.x_coord += self.spn[0]
         elif event.key == pygame.K_LEFT:
             self.x_coord -= self.spn[0]
-        elif event.key == pygame.K_PAGEUP:
-            self.spn = tuple(map(lambda x: x * 2, self.spn))
         elif event.key == pygame.K_PAGEDOWN:
+            self.spn = tuple(map(lambda x: x * 2, self.spn))
+        elif event.key == pygame.K_PAGEUP:
             self.spn = tuple(map(lambda x: x / 2, self.spn))
+        elif event.key == pygame.K_m:
+            if self.mode == 'map':
+                self.mode = 'sat'
+            elif self.mode == 'sat':
+                self.mode = 'sat,skl'
+            else:
+                self.mode = 'map'
 
 
-        self.get_image(self, self.x_coord, self.y_coord, self.spn[0], self.spn[1])
-
+        self.get_image(self, self.x_coord, self.y_coord, self.mode, self.spn[0], self.spn[1])
 
 
 if __name__ == '__main__':
     app = App()
     app.run()
+
