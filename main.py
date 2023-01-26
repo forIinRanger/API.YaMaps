@@ -1,30 +1,56 @@
 from io import BytesIO
 
+import pygame
+import sys
+
 import requests
 from PIL import Image
 
 
-def get_image(x_coord: float, y_coord: float, size_x: float = 0.1, size_y: float = 0.1) -> BytesIO or str:
-    coords = ",".join([str(x_coord), str(y_coord)])
-    spn = ",".join([str(size_x), str(size_y)])
+class App:
+    def __init__(self):
+        pygame.init()
+        self.width, self.height = 600, 450
+        self.surface = pygame.display.set_mode((self.width, self.height))
 
-    search_api_server = "http://static-maps.yandex.ru/1.x/"
+        pygame.display.set_caption("Yandex maps")
+        self.image = self.get_image(50, 50)
 
-    apikey = "40d1649f-0493-4b70-98ba-98533de7710b",
+    def run(self):
+        while True:
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    pygame.quit()
+                    sys.exit()
 
-    search_params = {
-        "l": 'map',
-        "apikey": apikey,
-        "ll": coords,
-        "spn": spn
-    }
+    def update(self):
+        pass
 
-    response = requests.get(search_api_server, params=search_params)
+    @staticmethod
+    def get_image(x_coord: float, y_coord: float, zoom: int = 10) -> BytesIO or str:
+        coords = ",".join([str(x_coord), str(y_coord)])
 
-    if not response or response.status_code != 200:
-        return "Ошибка"
+        search_api_server = "http://static-maps.yandex.ru/1.x/"
 
-    return BytesIO(response.content)
+        apikey = "40d1649f-0493-4b70-98ba-98533de7710b",
+
+        search_params = {
+            "l": 'map',
+            "apikey": apikey,
+            "ll": coords,
+            "z": zoom
+        }
+
+        response = requests.get(search_api_server, params=search_params)
+
+        if not response or response.status_code != 200:
+            return "Ошибка"
+
+        Image.open(BytesIO(response.content)).show()
+
+        return BytesIO(response.content)
 
 
-Image.open(get_image(50, 50)).show()
+if __name__ == '__main__':
+    app = App()
+    app.run()
