@@ -56,8 +56,8 @@ if __name__ == '__main__':
     screen = pygame.display.set_mode(size)
     all_sprites = pygame.sprite.Group()
 
-    e = get_image(x_crd, y_crd)
-    screen.blit(pygame.image.load(io.BytesIO(e.getvalue())), (100, 100))
+    img = get_image(x_crd, y_crd)
+    screen.blit(pygame.image.load(io.BytesIO(img.getvalue())), (100, 100))
     running = True
     while running:
         for event in pygame.event.get():
@@ -68,16 +68,16 @@ if __name__ == '__main__':
                     try:
                         mash_x *= 2
                         mash_y *= 2
-                        e = get_image(x_crd, y_crd, size_x=mash_x, size_y=mash_y)
-                        screen.blit(pygame.image.load(io.BytesIO(e.getvalue())), (100, 100))
+                        img = get_image(x_crd, y_crd, size_x=mash_x, size_y=mash_y)
+                        screen.blit(pygame.image.load(io.BytesIO(img.getvalue())), (100, 100))
                     except AttributeError:
                         pass
                 if event.key == pygame.K_PAGEDOWN:
                     try:
                         mash_x /= 2
                         mash_y /= 2
-                        e = get_image(x_crd, y_crd, size_x=mash_x, size_y=mash_y)
-                        screen.blit(pygame.image.load(io.BytesIO(e.getvalue())), (100, 100))
+                        img = get_image(x_crd, y_crd, size_x=mash_x, size_y=mash_y)
+                        screen.blit(pygame.image.load(io.BytesIO(imge.getvalue())), (100, 100))
                     except AttributeError:
                         pass
         pygame.display.flip()
