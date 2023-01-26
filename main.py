@@ -6,7 +6,6 @@ import sys
 import requests
 
 
-
 class App:
     def __init__(self):
         pygame.init()
@@ -15,22 +14,24 @@ class App:
 
         pygame.display.set_caption("Yandex maps")
 
-        self.x_coord, self.y_coord = 50, 50
-        self.get_image(self.x_coord, self.y_coord)
+        self.x_coord, self.y_coord = 37.639540, 55.739407
+        self.spn = 0.05, 0.05
+        self.get_image(self, self.x_coord, self.y_coord, self.spn[0], self.spn[1])
 
     def run(self):
         while True:
             map = pygame.transform.scale(self.image, (self.width, self.height))
+            self.surface.blit(map, (0, 0))
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     pygame.quit()
                     sys.exit()
-                if event.type == pygame.KEYDOWN:
-                    self.move_screen(event, self.x_coord, self.y_coord, (0.1, 0.1))
-            self.surface.blit(map, (0, 0))
+                if event.type == pygame.KEYUP:
+                    self.move_screen(event)
             pygame.display.flip()
 
-    def get_image(self, x_coord: float, y_coord: float, size_x: float = 0.1, size_y: float = 0.1) -> BytesIO or str:
+    @staticmethod
+    def get_image(self, x_coord: float, y_coord: float, size_x: float = 0.1, size_y: float = 0.1):
         coords = ",".join([str(x_coord), str(y_coord)])
         spn = ",".join([str(size_x), str(size_y)])
 
@@ -52,19 +53,17 @@ class App:
 
         self.image = pygame.image.load(BytesIO(response.content))
 
-    def move_screen(self, i, x_coord: float, y_coord: float, spn: (float, float)):
-        print(i.key)
-        if i.key == pygame.K_UP:
-            self.get_image(x_coord, y_coord + spn[1], spn[0], spn[1])
-        elif i.key == pygame.K_DOWN:
-            self.get_image(x_coord, y_coord - spn[1], spn[0], spn[1])
-        elif i.key == pygame.K_RIGHT:
-            self.get_image(x_coord + spn[0], y_coord, spn[0], spn[1])
-        elif i.key == pygame.K_LEFT:
-            self.get_image(x_coord - spn[0], y_coord, spn[0], spn[1])
+    def move_screen(self, event):
+        if event.key == pygame.K_UP:
+            self.y_coord += self.spn[1]
+        elif event.key == pygame.K_DOWN:
+            self.y_coord -= self.spn[1]
+        elif event.key == pygame.K_RIGHT:
+            self.x_coord += self.spn[0]
+        elif event.key == pygame.K_LEFT:
+            self.x_coord -= self.spn[0]
 
-        else:
-            self.get_image(x_coord, y_coord, spn[0], spn[1])
+        self.get_image(self, self.x_coord, self.y_coord, self.spn[0], self.spn[1])
 
 
 if __name__ == '__main__':
