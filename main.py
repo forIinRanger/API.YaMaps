@@ -75,6 +75,7 @@ class App:
             else:
                 self.mode = 'map'
 
+
         self.get_image(self, self.x_coord, self.y_coord, self.mode, self.spn[0], self.spn[1])
 
 
