@@ -56,9 +56,9 @@ class App:
 
     def move_screen(self, event):
         if event.key == pygame.K_UP:
-            self.y_coord += self.spn[1] * 0.6
+            self.y_coord += self.spn[1] * 0.4
         elif event.key == pygame.K_DOWN:
-            self.y_coord -= self.spn[1] * 0.6
+            self.y_coord -= self.spn[1] * 0.4
         elif event.key == pygame.K_RIGHT:
             self.x_coord += self.spn[0]
         elif event.key == pygame.K_LEFT:
